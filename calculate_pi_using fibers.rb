@@ -3,11 +3,19 @@ require 'bigdecimal'
 
 def calculate_pi(digit)
   k_equation_val =0.0
-  (0..digit).each do |kk|
-    k_equation_val += k_equation(kk)
+  kk=0
+  pi = Fiber.new do
+        loop do
+          k_equation_val += k_equation(kk)
+          cal = (426880*Math.sqrt(10005))/k_equation_val
+          Fiber.yield(cal.to_s[kk])
+          kk+=1
+        end
+      end
+  print "pi: "    
+  (0..digit).each do |v|
+    print pi.resume
   end
-  pi = (426880*Math.sqrt(10005))/k_equation_val
-  puts "pi: #{pi.to_s[0..(digit+2)]}"
 end
 
 def k_equation(k)
